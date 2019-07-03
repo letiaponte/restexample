@@ -1,5 +1,6 @@
 package com.kenzan.employeeservice.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.Entity;
@@ -16,7 +17,9 @@ public class Employee {
     private String firstName;
     private String middleInitial;
     private String lastName;
-    private Date dateOfBirth;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date dateOfBirth ;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dateOfEmployment;
     private boolean status;
 
