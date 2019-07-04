@@ -1,52 +1,88 @@
 package com.kenzan.employeeservice.controllers;
 
-//import com.kenzan.employeeservice.Errors.EmployeeNotFoundException;
+import com.kenzan.employeeservice.Errors.EmployeeNotFoundException;
+import com.kenzan.employeeservice.EmployeeResourceAssembler;
 import com.kenzan.employeeservice.models.Employee;
-import com.kenzan.employeeservice.repositories.EmployeeRepositoryH2;
+import com.kenzan.employeeservice.repositories.EmployeeRepository;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
-class EmployeeController {
-    private final EmployeeRepositoryH2 repositoryH2;
+public class EmployeeController {
 
-    EmployeeController(EmployeeRepositoryH2 repositoryH2) {
-        this.repositoryH2=repositoryH2;
+    private final EmployeeRepository repository;
+    private final EmployeeResourceAssembler assembler;
+
+    EmployeeController(EmployeeRepository repository,
+                       EmployeeResourceAssembler assembler) {
+
+        this.repository =repository;
+        this.assembler=assembler;
     }
 
     //Agregate root
 
     @GetMapping("/employees")
-    public List<Employee> findAll() {
-        List<Employee> employees = new ArrayList<>();
-        Iterable<Employee> all = repositoryH2.findAll();
+    public Resources<Resource<Employee>> findAll() {
+        List<Resource<Employee>> employees = new ArrayList<>();
+        Iterable <Employee> all = repository.findAll();
         for (Employee employee:all){
-            employees.add(employee);
+            employees.add(assembler.toResource(employee));
         }
-        return employees;
+
+        return new Resources<>(employees,
+                linkTo(methodOn(EmployeeController.class).findAll()).withSelfRel());
     }
 
     @PostMapping("/employees")
-    Employee newEmployee (@RequestBody Employee newEmployee){
-        return repositoryH2.save(newEmployee);
+    ResponseEntity<?> newEmployee (@RequestBody Employee newEmployee) throws URISyntaxException {
+        Resource<Employee> resource = assembler.toResource(repository.save(newEmployee));
+
+        return  ResponseEntity
+                .created(new URI(resource.getId().expand().getHref()))
+                .body(resource);
     }
 
     @GetMapping("/employees/{id}")
-    Employee findById(@PathVariable Long id){
-        return repositoryH2.findOne(id);
+    public Resource<Employee> findById(@PathVariable Long id){
+
+        Employee employee = repository.findOne(id);
+         if (employee == null) {
+             new EmployeeNotFoundException(id);
+         }
+
+         return assembler.toResource(employee);
     }
 
     @PutMapping("/employees/{id}")
-    Employee replaceEmployee(@RequestBody Employee newEmployee, @PathVariable Long id){
+    ResponseEntity<?> replaceEmployee (@RequestBody Employee newEmployee, @PathVariable Long id) throws  URISyntaxException {
+        Employee updatedEmployee = repository.save(newEmployee);
 
-        return repositoryH2.save(newEmployee);
+        Resource<Employee> resource = assembler.toResource(updatedEmployee);
+
+        return ResponseEntity
+            .created(new URI(resource.getId().expand().getHref()))
+            .body(resource);
     }
 
     @DeleteMapping("/employees/{id}")
-    void deleteEmployee (@PathVariable Long id) {
-        repositoryH2.delete(id);
+    ResponseEntity<?> deleteEmployee (@PathVariable Long id) {
+
+        repository.delete(id);
+
+        return ResponseEntity.noContent().build();
     }
+
 
 }

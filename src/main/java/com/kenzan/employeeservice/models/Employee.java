@@ -11,9 +11,8 @@ import java.util.Date;
 @Data
 @Entity
 public class Employee {
-    private @Id
-    @GeneratedValue
-    Long id;
+
+    private @Id @GeneratedValue Long id;
     private String firstName;
     private String middleInitial;
     private String lastName;
