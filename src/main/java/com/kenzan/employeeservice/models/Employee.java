@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.Date;
 
@@ -12,12 +13,14 @@ import java.util.Date;
 @Entity
 public class Employee {
 
-    private @Id @GeneratedValue Long id;
+    private @Id
+    @GeneratedValue (strategy = GenerationType.AUTO)
+    Long id;
     private String firstName;
     private String middleInitial;
     private String lastName;
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date dateOfBirth ;
+    private Date dateOfBirth;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dateOfEmployment;
     private boolean status;
