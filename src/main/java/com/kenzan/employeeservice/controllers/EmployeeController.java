@@ -16,6 +16,9 @@ import java.util.List;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
+/**
+ * Service for employees management
+ */
 @RestController
 @RequestMapping(value = "/employees")
 public class EmployeeController {
