@@ -28,7 +28,7 @@ class LoadDatabase {
 //            log.info("Preloading" + repository.save(new Employee("George", "", "Lopez", new Date(sdf.parse("1989-04-11").getTime()), new Date(sdf.parse("2019-05-09").getTime()), true)));
 //        };
 
-        //Read a JSON file and map that data to Employee model and save then into database
+        //Read a JSON file and map that data to Employee model and save them into database
         return args -> {
             // read json and write to db
             ObjectMapper mapper = new ObjectMapper();
