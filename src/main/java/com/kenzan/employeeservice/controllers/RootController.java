@@ -9,7 +9,7 @@ import org.springframework.hateoas.Resource;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EmployeeResourceAssembler implements ResourceAssembler<Employee, Resource <Employee>> {
+public class RootController implements ResourceAssembler<Employee, Resource <Employee>> {
 
     @Override
     public Resource<Employee> toResource (Employee employee) {
