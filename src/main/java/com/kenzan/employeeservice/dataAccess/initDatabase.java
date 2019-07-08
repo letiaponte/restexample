@@ -21,7 +21,7 @@ class LoadDatabase {
     @Bean
     CommandLineRunner initDatabase(EmployeeRepository repository) {
 
-        //Add registers preload to database
+        //Add records preload to database
 //        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 //        return args -> {
 //            log.info("Preloading" + repository.save(new Employee("Maria", "G.", "Godinez", new Date(sdf.parse("1985-01-01").getTime()), new Date(sdf.parse("2019-01-01").getTime()), true)));
