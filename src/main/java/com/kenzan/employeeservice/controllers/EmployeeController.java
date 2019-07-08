@@ -34,10 +34,11 @@ public class EmployeeController {
 
     @GetMapping("/employees")
     public Resources<Resource<Employee>> findAll() {
-        List<Resource<Employee>> employees = employeeService.findAll().stream()
-                .map(employee -> new Resource<>(employee,
-                        linkTo(DummyInvocationUtils.methodOn(EmployeeController.class).findById(employee.getId())).withSelfRel()))
-                .collect(Collectors.toList());
+        List<Resource<Employee>> employees = new ArrayList<>();
+        Iterable <Employee> all = employeeService.findAll();
+        for (Employee employee:all){
+            employees.add(assembler.toResource(employee));
+        }
 
         return new Resources<>(employees,
                 linkTo(methodOn(EmployeeController.class).findAll()).withSelfRel());
