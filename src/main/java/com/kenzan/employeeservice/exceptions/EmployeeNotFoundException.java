@@ -1,4 +1,4 @@
-package com.kenzan.employeeservice.Errors;
+package com.kenzan.employeeservice.exceptions;
 
 public class EmployeeNotFoundException extends RuntimeException{
 

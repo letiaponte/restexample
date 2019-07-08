@@ -1,8 +1,7 @@
-package com.kenzan.employeeservice;
+package com.kenzan.employeeservice.controllers;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 
-import com.kenzan.employeeservice.controllers.EmployeeController;
 import com.kenzan.employeeservice.models.Employee;
 
 import org.springframework.hateoas.ResourceAssembler;
