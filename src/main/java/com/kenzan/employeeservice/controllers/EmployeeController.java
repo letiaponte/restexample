@@ -12,6 +12,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -35,11 +36,9 @@ public class EmployeeController {
 
     @GetMapping("/")
     public Resources<Resource<Employee>> findAll() {
-        List<Resource<Employee>> employees = new ArrayList<>();
-        Iterable <Employee> all = employeeService.findAll();
-        for (Employee employee:all){
-            employees.add(rootController.toResource(employee));
-        }
+        List<Resource<Employee>> employees = employeeService.findAll().stream()
+                .map(rootController::toResource)
+                .collect(Collectors.toList());
 
         return new Resources<>(employees,
                 linkTo(methodOn(EmployeeController.class).findAll()).withSelfRel());
@@ -63,9 +62,8 @@ public class EmployeeController {
     }
 
 
-
     @PutMapping("/{id}")
-    ResponseEntity<?> update (@RequestBody Employee newEmployee, @PathVariable Long id) throws URISyntaxException {
+    ResponseEntity<?> update(@RequestBody Employee newEmployee, @PathVariable Long id) throws URISyntaxException {
 
         Employee updatedEmployee = employeeService.update(newEmployee, id);
 
@@ -80,7 +78,7 @@ public class EmployeeController {
     ResponseEntity<?> delete(@PathVariable Long id) {
 
         boolean response = employeeService.delete(id);
-        if (!response){
+        if (!response) {
             throw new EmployeeNotFoundException(id);
         }
 
